@@ -20,7 +20,7 @@
   "homepage": "https://github.com/ridwan57/forkify-project#readme",
   "devDependencies": {
     "babel-core": "^6.26.3",
-    "babel-loader": "^8.1.0",
+    "babel-loader": "^7.1.0",
     "babel-preset-env": "^1.7.0",
     "html-webpack-plugin": "^4.3.0",
     "webpack": "^4.43.0",
@@ -29,7 +29,7 @@
   },
   "dependencies": {
     "@babel/core": "^7.9.6",
-    "babel-polyfill": "^6.26.0",
-    "jquery": "^3.5.1"
+    "axios": "^0.19.2",
+    "babel-polyfill": "^6.26.0"
   }
 }
