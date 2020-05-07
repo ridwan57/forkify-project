@@ -2,11 +2,14 @@
 import Search from './models/Search';
 import Recipe from './models/Recipe';
 import * as searchView from './views/searchView';
+import * as recipeView from './views/recipeView';
 import { elements, renderLoader, clearLoader } from './views/base';
 
 const state = {};
 
 const controlsearch = async () => {
+
+
     const query = searchView.getInput();
     console.log(query);
     if (query) {
@@ -29,12 +32,15 @@ const controlsearch = async () => {
 
 }
 
-elements.searchView.addEventListener('submit', e => {
+elements.searchForm.addEventListener('submit', e => {
     e.preventDefault();
     controlsearch();
 
 
 })
+
+
+
 
 elements.searchResPages.addEventListener('click', e => {
 
@@ -59,21 +65,34 @@ const controlRecipe = async () => {
     console.log(id);
 
     if (id) {
-        //Prepare UI for changes
 
+        //Prepare UI for changes
+        recipeView.clearRecipe();
+        renderLoader(elements.recipe);
 
         //Create new recipe Object
+        if (state.search) {
+            console.log('index.js');
+            searchView.highlightSelected(id);
+        }
+
 
         state.recipe = new Recipe(id);
+
         try {
 
             //Get recipe data
             await state.recipe.getRecipe();
+            console.log(state.recipe.ingredients);
+            state.recipe.parseIngredients();
 
             //Calculate servings and time
 
             state.recipe.calcTime();
             state.recipe.calcSavings();
+            //render recipe
+            clearLoader();
+            recipeView.renderRecipe(state.recipe);
             console.log(state.recipe);
         }
         catch (error) {

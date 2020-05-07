@@ -29,4 +29,68 @@ export default class Recipe {
         this.servings = 4;
     }
 
+    parseIngredients() {
+
+        const unitsLong = ['tablespoons', 'tablespoon', 'ounces', 'ounce', 'teaspoons', 'teaspoon', 'cups', 'pounds'];
+        const unitsShort = ['tbsp', 'tbsp', 'oz', 'oz', 'tsp', 'tsp', 'cup', 'pound'];
+        const units = [...unitsShort, 'kg', 'g'];
+
+        const newIngredients = this.ingredients.map(el => {
+            // 1) Uniform Units
+            let ingredient = el.toLowerCase();
+            unitsLong.forEach((unit, i) => {
+                ingredient = ingredient.replace(unit, unitsShort[i]);
+            });
+
+
+            // 2) Remove parenthesis
+
+            ingredient = ingredient.replace(/ *\([^)]*\) */g, ' ');
+
+
+
+            // 3) Parse Ingredients
+
+
+            const arrIng = ingredient.split(' ');
+            const unitIndex = arrIng.findIndex(el2 => units.includes(el2));
+            let objIng;
+            let count;
+            if (unitIndex > -1) {
+                const arrCount = arrIng.slice(0, unitIndex);
+                if (arrCount.length == 1) {
+                    count = eval(arrIng[0].replace('-', '+'));
+                }
+                else {
+                    count = eval(arrIng.slice(0, unitIndex).join('+'));
+                }
+                //There is a unit
+                objIng = {
+                    count,
+                    unit: arrIng[unitIndex],
+                    ingredient: arrIng.slice(unitIndex + 1).join(' ')
+                }
+            }
+            else if (parseInt(arrIng[0], 10)) {
+                objIng = {
+                    count: parseInt(arrIng[0], 10),
+                    unit: '',
+                    ingredient: arrIng.slice(1).join(' ')
+                }
+            }
+            else if (unitIndex === -1) {
+                //There is no unit
+                objIng = {
+                    count: 1,
+                    unit: '',
+                    ingredient
+                }
+
+            }
+
+            return objIng;
+        });
+        this.ingredients = newIngredients;
+    }
+
 }

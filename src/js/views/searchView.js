@@ -10,6 +10,16 @@ export const clearResults = () => {
     elements.searchResPages.innerHTML = '';
 };
 
+export const highlightSelected = id => {
+    console.log('id: ' + id);
+    const resultsArr = Array.from(document.querySelectorAll('.results__link'));
+    resultsArr.forEach(el => {
+        console.log('**');
+        el.classList.remove('results__link--active');
+    });
+    console.log('##');
+    document.querySelector(`.results__link[href*="${id}"]`).classList.add('results__link--active');
+};
 const limitRecipeTitle = (title, limit = 17) => {
     const newTitle = [];
     if (title.length > limit) {
@@ -27,21 +37,20 @@ const limitRecipeTitle = (title, limit = 17) => {
 }
 const renderRecipe = recipe => {
     const markup = `
-    <li>
-                    <a class="results__link results__link--active" href="#${recipe.recipe_id}">
-                        <figure class="results__fig">
-                            <img src="${recipe.image_url}" alt="${recipe.title}">
-                        </figure>
-                        <div class="results__data">
-                            <h4 class="results__name">${limitRecipeTitle(recipe.title)}</h4>
-                            <p class="results__author">${recipe.publisher}</p>
-                        </div>
-                    </a>
-                </li>
+        <li>
+            <a class="results__link" href="#${recipe.recipe_id}">
+                <figure class="results__fig">
+                    <img src="${recipe.image_url}" alt="${recipe.title}">
+                </figure>
+                <div class="results__data">
+                    <h4 class="results__name">${limitRecipeTitle(recipe.title)}</h4>
+                    <p class="results__author">${recipe.publisher}</p>
+                </div>
+            </a>
+        </li>
     `;
     elements.searchResList.insertAdjacentHTML('beforeend', markup);
-
-}
+};
 
 const createButton = (page, type) => `
             <button class="btn-inline results__btn--${type}" data-goto= ${type === 'prev' ? page - 1 : page + 1}>
